@@ -1,0 +1,52 @@
+{
+  "name": "@indieverse/ts-lib-npm-template",
+  "version": "1.0.0",
+  "description": "A project template to bootstrap NPM package with Typescript",
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    },
+    "./package.json": "./package.json"
+  },
+  "keywords": [
+    "typescript-template"
+  ],
+  "author": "effect_doplera <effectdopler0@gmail.com>",
+  "license": "MIT",
+  "typesVersions": {
+    "*": {}
+  },
+  "files": [
+    "dist/**/*",
+    "LICENSE",
+    "README.md"
+  ],
+  "scripts": {
+    "build": "NODE_ENV=production tsup ./src/index.ts",
+    "build:docs": "typedoc --out docs ./src/index.ts",
+    "dev": "tsup --watch",
+    "format": "biome check --write .",
+    "test": "tsx --test $(find src -type f -name '*.test.ts')",
+    "test:coverage": "tsx --test --experimental-test-coverage $(find src -type f -name '*.test.ts')",
+    "test:watch": "tsx --test --watch $(find src -type f -name '*.test.ts')",
+    "changeset": "changeset"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "^1.8.2",
+    "@changesets/changelog-github": "^0.5.0",
+    "@changesets/cli": "^2.27.5",
+    "@types/node": "^20.14.7",
+    "tsup": "^8.1.0",
+    "tsx": "^4.15.7",
+    "typedoc": "^0.25.13",
+    "typescript": "^5.5.2"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

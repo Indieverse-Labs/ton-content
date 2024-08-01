@@ -1,0 +1,52 @@
+name: Release 🚀
+
+on:
+  push:
+    branches:
+      - master
+  workflow_dispatch:
+
+permissions:
+  pull-requests: write
+  contents: write
+  issues: write
+  id-token: write
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+
+jobs:
+  release:
+    if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/master' && !contains(github.event.head_commit.message, '[skip ci]')}}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout 🧳
+        uses: actions/checkout@v4
+
+      - name: Setup PNPM ⚙️
+        uses: pnpm/action-setup@v4.0.0
+        with:
+          version: 8
+
+      - name: Install dependencies ⏬
+        run: pnpm install --no-frozen-lockfile
+
+      - name: Test 🔫
+        run: pnpm run test
+
+      - name: Build ⏰
+        run: pnpm build
+        env:
+          NODE_ENV: production
+
+      - name: Release 🚀
+        id: changesets
+        uses: changesets/action@v1
+        with:
+          version: pnpm changeset version
+          # publish: pnpm changeset publish
+          commit: "ci: :package: release"
+          title: "ci: :package: release"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
